@@ -571,27 +571,266 @@ boolean result = obj instanceof Class
 
 ### 5.16 匿名类
 
-- 匿名类一定是内部类
+1. 与类有关的匿名类
 
-- 匿名类的主要用途就是向方法的参数传值。
+   - 匿名类一定是内部类、子类。
 
-  假设 f（B x）是一个方法
+   - 匿名类的主要用途就是向方法的参数传值。
 
-  ```
-  void f(B x){
-  	x.方法;//x调用B类中的方法；
-  }
-  ```
+   - 假设 f（B x）是一个方法
 
-  其中的参数是B类对象，那么在调用方法 f() 时可以向 f() 的参数x传递一个匿名对象：
+     ```
+     void f(B x){
+     	x.方法;//x调用B类中的方法；
+     }
+     ```
 
-  ```
-  f(new B()
-  	{
-  		匿名类的类体，继承B类的方法或重写B类的方法
-  	}
-  );//调用方法f()
-  ```
+     其中的参数是B类对象，那么在调用方法 f() 时可以向 f() 的参数x传递一个匿名对象：
 
-  
+     ```
+     f(new B()
+     	{
+     		匿名类的类体，继承B类的方法或重写B类的方法
+     	}
+     );//调用方法f()
+     ```
+
+   - 用法
+
+     ```
+     abstract class Student{
+          abstract void speak();
+     }
+     class Teacher{
+          void look(Student stu){
+              stu.speak();  	           //执行匿名类体中重写的speak()方法
+          } 
+     }
+     public class Example5_16{
+         public static void main(String args[]){
+             Teacher zhang=new Teacher();
+             zhang.look(new Student(){   //匿名类的类体，即Student的子类的类体	
+                                    void speak(){
+                                        System.out.println("这是匿名类中的方法");
+                                    }
+                       }  //匿名类类体结束
+                      );
+         } 
+     }
+     结果：这是匿名类中的方法
+     ```
+
+2. 与接口有关的匿名类
+
+   用法
+
+   ```
+   interface Show{
+       public void show();
+   }
+   class A{
+       void f(Show s){
+           s.show();        //s调用匿名类体中实现的接口方法（接口回调）
+       } 
+   }
+   public class Example5_17{
+       public static void main(String args[]){
+           A a=new A();
+           a.f(new Show(){                       
+                  public void show(){
+                        System.out.println("这是实现了接口的匿名类");
+                  }
+              });
+       } 
+   }
+   结果：这是实现了接口的匿名类
+   ```
+
+
+### 5.17 异常类
+
+- 在try-catch申明变量的，但是后面再try-catch块外面使用的时候该变量失效了；原因是Java规定的局部变量只能在它的范围内使用。一对花括号{ }构成一个局部作用域，局部作用域中定义的变量只在该作用域内有效。不光是try…catch…，任何一对花括号构成的块都是如此。
+
+## 第六章 字符串和正则表达式
+
+### 6.1 String类
+
+- String类在java.lang包中，不用显式导入；
+- String声明的变量是一个对象；
+- String类创建的字符串对象不可修改，即String字符串不能修改、删除或替换字符串中的某个字符。即String对象一旦创建，实体是不可以再发生变化的（String类的成员变量和方法都是final修饰）；
+
+1. 创建字符串对象
+
+   - ```
+     String s;//声明
+     s=new String("we are student");//创建
+     
+     String s=new String("we are student");//声明创建一步完成
+     ```
+
+   - ```
+     String tom=new String(s);//用一个已创建的字符串创建另一个字符串
+     ```
+
+   - ```
+     char[] a={'a','b','c'};
+     String s=new String(a);//用一个字符数字a创建一个字符串对象
+     ```
+
+   - ```
+     char[] a={'s','t','u','s','n'};
+     String s=new String(a,2,3);//提取字符数组a中的一部分字符创建一个字符串对象，2，3分别指定在a中提取字符的起始位置和从该位置开始截取的字符个数；
+     ```
+
+2. 引用字符串常量对象
+
+   ```
+   String s1,s2;
+   s1="How are you";
+   s2="How are you";//s1和s2具有相同的引用，因而具有相同的实体。s1和s2指向同一块内存；"How are you"是字符串常量，它是一个对象；
+   ```
+
+3. String类的常用方法
+
+   - public int length()：获取字符串的长度
+   - public boolean equals(String s)：比较两个字符串是否相同
+   - public boolean contains(String s)：判断当前字符串对象是否含有参数指定的字符串s
+   - public boolean startsWith(String s)和public boolean endsWith(String s)：判断当前字符串对象的前后缀是否是参数指定的字符串s
+   - public int compareTo(String s)：按字典序顺序比较
+   - public int indexOf(String s)：返回首次出现s的位置
+   - public String substring(int startpoint)：返回后缀
+   - public String trim()：去掉前后空格
+
+4. 字符串与基本数据的相互转化
+
+   String——>基本数据类型
+
+   ```
+   String s="123";
+   int x=Integer.parseInt(s);
+   ```
+
+   基本数据类型——>String
+
+   ```
+   float x=3.14f;
+   String s=String.ValutOf(x);
+   ```
+
+5. 对象的字符串表示
+
+   - 所有的类都默认是java.lang包中Object类的子类或间接子类。
+
+   - Object类有一个public方法public String toString()，一个对象通过调用该方法可以获得该对象的字符串表示。
+
+   - 如果一个类没有重写public String toString()方法，那么该类所创建的对象调用toString()方法得到的字符串格式为：
+
+     类名@对象的引用
+
+6. 字符串与字符数组、字节数组
+
+   字符串——>字符数组
+
+   ```
+   String s="asdf";
+   char[] a=s.toCharArray();
+   ```
+
+   字符数组——>字符串
+
+   ```
+   char[] a={'a','b','c'};
+   String s=new String(a);//用一个字符数字a创建一个字符串对象
+   ```
+
+   字符串——>字节数组
+
+   ```
+   String s="asdf";
+   byte[] b=s.getBytes();
+   ```
+
+### 6.2 StringBuffer类
+
+- 解决String类创建的字符串对象不可修改的问题。
+
+1. StringBuffer类的构造方法
+   - StringBuffer()
+   - StringBuffer(int size)
+   - StringBuffer(String s)
+2. StringBuffer类的常用方法
+   - append()
+   - char charAt(int n)
+   - void setCharAt(int n,char ch)
+   - StringBuffer insert(int index,String str)
+   - public StringBuffer reverse()
+   - StringBuffer delete(int startIndex,int endIndex)
+   - StringBuffer replace(int startIndex,int endIndex,String str)
+
+### 6.3 StringTokenizer类
+
+- 用于分析一个字符串并将字符串分解成可被独立使用的单词
+
+### 6.4 正则表达式及字符串的替换和分解
+
+1. 正则表达式
+
+2. 字符串的替换：public String replaceAll(String regex,String replacement)
+
+   ```
+   String result="asdfsfd132231".replaceAll("[a-zA-Z]+","你好")
+   ```
+
+3. 字符串的分解：public String[] split(String regex)
+
+   ```
+   String str="123afsd123afd123afd"
+   String regex="\\D+";
+   String digiWord[]=str.split(regex);
+   ```
+
+### 6.5 Scanner类
+
+- 从字符串中解析程序所需要的数据。
+
+1. 使用默认分隔标记解析字符串
+
+   ```
+   String NBA="I Love This Game";
+   Scanner scanner=new Scanner(NBA);
+   String s1=scanner.next();//s1=I
+   String s2=scanner.next();//s2=Love
+   ```
+
+2. 使用正则表达式作为分隔标记解析字符串
+
+### 6.6 模式匹配
+
+Java提供了专门用来进行模式匹配的Pattern类和Match类，这些类在java.util.regex包中。
+
+## 第七章 常用实用类
+
+### 7.5 LinkedList\<E>泛型类
+
+1. LinkedList\<E>对象
+
+   java.util包中的LinkList\<E>泛型类创建的对象以链表结构存储数据，**不需要用户去操作安排节点中所存放的下一个或上一个节点的引用。**
+
+   ```
+   LinkedList<String> mylist=new LinkedList<String>();
+   mylist.add("How");
+   ```
+
+2. 常用方法：增删改查
+
+3. 遍历链表
+
+## 第八章 线程
+
+
+
+## 第九章 输入流和输出流
+
+- 输入流：InputStream或者Reader：从文件中读到程序中；
+- 输出流：OutputStream或者Writer：从程序中输出到文件中；
 
