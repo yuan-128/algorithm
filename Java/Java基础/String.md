@@ -46,6 +46,25 @@
    //
    ```
 
+3. String<—>int
+
+   ```
+   public class C2{
+       public static void main(String[] args) {
+   //      String——>int
+           String str="123";
+           int num1=Integer.valueOf(str);
+           int num2=Integer.parseInt(str);
+           System.out.println(num1+" "+num2);
+   //      int——>String
+           int num=100;
+           String str1=Integer.toString(num);
+           String str2=String.valueOf(num);
+           System.out.println(str1+" "+str2);
+       }
+   }
+   ```
+
    
 
 参考资料：
